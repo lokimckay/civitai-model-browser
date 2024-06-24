@@ -1,0 +1,45 @@
+.model-li {
+  display: grid;
+  grid-template-columns: 1fr;
+  border: 1px solid #ccc;
+  border-radius: 0.25em;
+  padding: 1em;
+  background: var(--mid);
+}
+
+.model-li[data-loading="true"],
+.model-li[data-loading="true"] textarea {
+  border-style: dotted;
+  background: none;
+}
+
+.model-li .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8em;
+}
+
+.model-li h3 {
+  margin: 0;
+  font-size: 1em;
+}
+
+.model-li textarea {
+  background: var(--mid);
+  display: block;
+  align-content: center;
+  height: 3em;
+  border: 1px solid #ccc;
+  border-radius: 0.25em;
+  padding: 0.25em;
+  resize: none;
+  min-height: min-content;
+  font-size: 0.8em;
+  margin-bottom: 0.25em;
+}
+
+.model-li a svg {
+  width: 1em;
+  height: 1em;
+}

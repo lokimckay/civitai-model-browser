@@ -1,5 +1,6 @@
 ---
 import Main from "@/layouts/Main.astro";
+import Models from "@/components/models";
 import "@/styles/main.css";
 ---
 
@@ -7,5 +8,43 @@ import "@/styles/main.css";
   <main>
     <h1>Civitai Model Browser</h1>
     <p>Displays Civitai info for your locally downloaded models</p>
+    <button>Choose model folder</button>
+
+    <Models client:visible />
   </main>
 </Main>
+
+<script>
+  import { modelExtensions } from "@/lib/config";
+  import { $models } from "@/lib/store";
+  import { listFilesInDirectory } from "@/lib/fs";
+  import { createId } from "@paralleldrive/cuid2";
+  import { overwrite, processQueue } from "@/lib/queue";
+
+  const button = document.querySelector("button");
+
+  button?.addEventListener("click", async () => {
+    const dirHandle = await window.showDirectoryPicker();
+    const list = await listFilesInDirectory(dirHandle);
+
+    const promises = list.files
+      .filter((file) => {
+        const ext = file.name.split(".").pop();
+        return ext && modelExtensions.includes(ext);
+      })
+      .map(async (model) => {
+        const { name, path, handle } = model;
+        return {
+          id: createId(),
+          handle,
+          name,
+          path: path.join("/"),
+        };
+      });
+
+    const models = await Promise.all(promises);
+    $models.set(models.map(({ handle, ...rest }) => rest)); // Add model to state
+    await overwrite(models.map(({ id, handle }) => [id, handle])); // Add model handle to queue (hashing takes time)
+    processQueue(); // Start hashing
+  });
+</script>
