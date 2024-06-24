@@ -10,3 +10,12 @@
 1. Tool queries [/models-versions/by-hash/:hash](https://wiki.civitai.com/wiki/Civitai_API#GET_/api/v1/models-versions/by-hash/:hash)
 1. Tool saves returned data to local storage
 1. Tool displays relevant data
+
+## Roadmap
+
+- [x] more info pages
+- [ ] deploy
+- [ ] images
+- [ ] fuzzy search
+- [ ] copy buttons
+- [ ] grid view

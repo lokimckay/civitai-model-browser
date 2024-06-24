@@ -32,11 +32,19 @@ export default function ModelListItem({ model: data }: { model: Model }) {
         </a>
       </div>
       <h3>
-        <a href={`/${id}`}>{loading ? "⌛" : `${modelName} - ${name}`}</a>
+        <a href={`./model?id=${id}`}>
+          {loading ? "⌛" : `${modelName} - ${name}`}
+        </a>
       </h3>
 
-      <textarea>{fileName}</textarea>
-      {hasTriggers && <textarea>{trainedWords?.join(", ")},</textarea>}
+      <textarea readOnly={true} spellCheck={false}>
+        {fileName}
+      </textarea>
+      {hasTriggers && (
+        <textarea readOnly={true} spellCheck={false}>
+          {trainedWords?.join(", ")},
+        </textarea>
+      )}
     </div>
   );
 }
