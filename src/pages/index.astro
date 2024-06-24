@@ -1,16 +1,11 @@
 ---
-
+import Main from "@/layouts/Main.astro";
+import "@/styles/main.css";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Main title="Civitai Model Browser">
+  <main>
+    <h1>Civitai Model Browser</h1>
+    <p>Displays Civitai info for your locally downloaded models</p>
+  </main>
+</Main>
