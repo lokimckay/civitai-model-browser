@@ -14,7 +14,7 @@
 ## Roadmap
 
 - [x] more info pages
-- [ ] deploy
+- [x] deploy
 - [ ] images
 - [ ] fuzzy search
 - [ ] copy buttons
