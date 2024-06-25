@@ -12,16 +12,19 @@
   "dependencies": {
     "@astrojs/check": "^0.7.0",
     "@astrojs/preact": "^3.5.0",
+    "@astropub/worker": "^0.1.0",
     "@nanostores/persistent": "^0.10.1",
     "@nanostores/preact": "^0.5.1",
     "@paralleldrive/cuid2": "^2.2.2",
     "@types/wicg-file-system-access": "^2023.10.5",
     "astro": "^4.11.0",
-    "dexie": "^4.0.7",
-    "dexie-react-hooks": "^1.1.7",
     "idb-keyval": "^6.2.1",
     "nanostores": "^0.10.3",
     "preact": "^10.22.0",
+    "sha256-uint8array": "^0.10.7",
     "typescript": "^5.5.2"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.2.2"
   }
 }

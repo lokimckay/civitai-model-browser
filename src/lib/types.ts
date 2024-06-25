@@ -1,5 +1,25 @@
 // Opinionated subset of https://github.com/civitai/civitai/wiki/REST-API-Reference#response-fields-4
 
+export type Model = {
+  id: string;
+  name: string;
+  localFile: File;
+  path: string;
+  size: number;
+  hash?: string;
+  hashing?: boolean;
+  hashedBytes?: number;
+  info?: ModelVersion;
+  fetching?: boolean;
+  image?: string;
+  error?: Error;
+};
+
+export type Progress = {
+  remaining: number;
+  current: string | null;
+};
+
 export type ModelVersion = {
   id: number;
   air: string;
@@ -15,8 +35,8 @@ export type ModelVersion = {
   trainedWords: string[];
   baseModel: number;
   stats: Stats;
-  model: Model;
-  files: File[];
+  model: RemoteModel;
+  files: ModelArtifact[];
   images: Image[];
 };
 
@@ -27,7 +47,7 @@ type Stats = {
   thumbsUpCount: number;
 };
 
-type Model = {
+type RemoteModel = {
   name: string;
   type:
     | "Checkpoint"
@@ -42,7 +62,7 @@ type Model = {
   mode: string;
 };
 
-type File = {
+type ModelArtifact = {
   id: number;
   primary: boolean;
   downloadUrl: string;

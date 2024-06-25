@@ -1,22 +1,6 @@
 import { persistentAtom, persistentMap } from "@nanostores/persistent";
-import type { ModelVersion } from "./types";
+import type { Model, ModelVersion, Progress } from "./types";
 import { computed } from "nanostores";
-
-export type Model = {
-  id: string;
-  name: string;
-  hash?: string;
-  hashing?: boolean;
-  info?: ModelVersion;
-  fetching?: boolean;
-  image?: string;
-  error?: Error;
-};
-
-type Progress = {
-  remaining: number;
-  current: string | null;
-};
 
 const encDec = {
   encode: JSON.stringify,

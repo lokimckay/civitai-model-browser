@@ -181,3 +181,7 @@ button#submit:active {
   transform: scale(0.98);
   box-shadow: none;
 }
+
+input#model-folder {
+  display: none;
+}

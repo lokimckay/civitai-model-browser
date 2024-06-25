@@ -8,43 +8,51 @@ import "@/styles/main.css";
   <main>
     <h1>Civitai Model Browser</h1>
     <p>Displays Civitai info for your locally downloaded models</p>
-    <button>Choose model folder</button>
+    <p>Runs in your browser, no data is uploaded</p>
 
+    <!-- @ts-ignore (webkitdirectory not exists) -->
+    <input
+      id="model-folder"
+      type="file"
+      webkitdirectory
+      label="Choose model directory"
+    />
+    <button>Choose model folder</button>
     <Models client:visible />
   </main>
 </Main>
 
 <script>
-  import { modelExtensions } from "@/lib/config";
-  import { $models } from "@/lib/store";
-  import { listFilesInDirectory } from "@/lib/fs";
-  import { createId } from "@paralleldrive/cuid2";
-  import { overwrite, processQueue } from "@/lib/queue";
+  import { $models, $progress, updateModel } from "@/lib/store";
 
   const button = document.querySelector("button");
+  const input: HTMLElement | null = document.querySelector("#model-folder");
+  const worker = new Worker("../lib/worker", { type: "module" });
 
-  button?.addEventListener("click", async () => {
-    const dirHandle = await window.showDirectoryPicker();
-    const list = await listFilesInDirectory(dirHandle);
-
-    const promises = list.files
-      .filter((file) => {
-        const ext = file.name.split(".").pop();
-        return ext && modelExtensions.includes(ext);
-      })
-      .map(async (model) => {
-        const { name, path, handle } = model;
-        return {
-          id: createId(),
-          handle,
-          name,
-          path: path.join("/"),
-        };
-      });
-
-    const models = await Promise.all(promises);
-    $models.set(models.map(({ handle, ...rest }) => rest)); // Add model to state
-    await overwrite(models.map(({ id, handle }) => [id, handle])); // Add model handle to queue (hashing takes time)
-    processQueue(); // Start hashing
+  button?.addEventListener("click", () => input!.click());
+  input?.addEventListener("change", (event) =>
+    worker.postMessage((event.target as HTMLInputElement).files)
+  );
+  worker.addEventListener("message", (event) => {
+    const { data } = event || {};
+    if (!data) return;
+    switch (data.type) {
+      case "models":
+        $models.set(data.models);
+        $progress.setKey("remaining", data.models.length);
+        break;
+      case "processing":
+        $progress.setKey("current", data.model.id);
+        break;
+      case "updateModel":
+        const { type, ...rest } = data;
+        updateModel(rest);
+        break;
+      case "processed":
+        $progress.setKey("remaining", $progress.get().remaining - 1);
+        break;
+      default:
+        console.error("Unknown message type", event.data.type);
+    }
   });
 </script>
