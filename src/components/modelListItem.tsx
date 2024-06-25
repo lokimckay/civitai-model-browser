@@ -9,14 +9,22 @@ export default function ModelListItem({ model: data }: { model: Model }) {
     hashing,
     fetching,
     info: modelVersion,
+    error,
   } = data || {};
   const { name, model, browseUrl, trainedWords } = modelVersion || {};
   const { name: modelName, type, nsfw } = model || {};
-  const loading = !(fetching === false) || !(hashing === false);
-  const hasTriggers = trainedWords && trainedWords.length > 0;
+  const queued = !(fetching === false) || !(hashing === false);
+  const loading = fetching || hashing;
+  const hasTriggers =
+    type === "LORA" && trainedWords && trainedWords.length > 0;
 
   return (
-    <div class="model-li" data-loading={loading}>
+    <div
+      class="model-li"
+      data-is-queued={queued}
+      data-is-loading={loading}
+      data-has-error={!!error}
+    >
       <div class="header">
         <div>
           <span class="type">{type}</span>
@@ -27,19 +35,26 @@ export default function ModelListItem({ model: data }: { model: Model }) {
             </>
           )}
         </div>
-        <a href={browseUrl}>
-          Civitai <NewTab />
-        </a>
+        {browseUrl && (
+          <a href={browseUrl}>
+            Civitai <NewTab />
+          </a>
+        )}
       </div>
-      <h3>
-        <a href={`./model?id=${id}`}>
-          {loading ? "⌛" : `${modelName} - ${name}`}
-        </a>
-      </h3>
+      {loading ? (
+        `⌛ ${hashing ? "hashing" : fetching ? "fetching" : "queued"}`
+      ) : (
+        <h3>
+          <a href={`./model?id=${id}`}>
+            {error ? `❌ ${fileName}` : `${modelName} - ${name}`}
+          </a>
+        </h3>
+      )}
 
       <textarea readOnly={true} spellCheck={false}>
-        {fileName}
+        {error ? error.message : fileName}
       </textarea>
+
       {hasTriggers && (
         <textarea readOnly={true} spellCheck={false}>
           {trainedWords?.join(", ")},

@@ -14,15 +14,16 @@ export default function Model() {
     hashing,
     fetching,
     info: modelVersion,
+    error,
   } = data || {};
   const { name, model, browseUrl, trainedWords } = modelVersion || {};
   const { name: modelName, type, nsfw } = model || {};
+  const hasTriggers =
+    type === "LORA" && trainedWords && trainedWords.length > 0;
 
   return (
     <div class="model-info">
-      <h1>
-        {modelName} - {name}
-      </h1>
+      <h1>{!error ? `${modelName} - ${name}` : `❌ ${fileName}`}</h1>
 
       <ul class="fields">
         <Input
@@ -31,12 +32,14 @@ export default function Model() {
           spellCheck={false}
           value={fileName}
         />
-        <Input
-          label="Trigger words"
-          readOnly={true}
-          spellCheck={false}
-          value={trainedWords?.join(", ")}
-        />
+        {hasTriggers && (
+          <Input
+            label="Trigger words"
+            readOnly={true}
+            spellCheck={false}
+            value={trainedWords?.join(", ")}
+          />
+        )}
       </ul>
       <h2>Raw data</h2>
       <textarea readOnly={true} spellCheck={false} rows={25}>

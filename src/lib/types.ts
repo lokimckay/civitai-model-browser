@@ -29,7 +29,14 @@ type Stats = {
 
 type Model = {
   name: string;
-  type: string;
+  type:
+    | "Checkpoint"
+    | "TextualInversion"
+    | "Hypernetwork"
+    | "AestheticGradient"
+    | "LORA"
+    | "Controlnet"
+    | "Poses";
   nsfw: boolean; // not safe for work
   poi: boolean; // person of interest
   mode: string;

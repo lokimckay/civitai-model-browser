@@ -7,10 +7,21 @@
   background: var(--mid);
 }
 
-.model-li[data-loading="true"],
-.model-li[data-loading="true"] textarea {
+.model-li[data-is-queued="true"],
+.model-li[data-is-queued="true"] textarea {
   border-style: dotted;
   background: none;
+}
+
+.model-li[data-is-loading="true"],
+.model-li[data-is-loading="true"] textarea {
+  border-style: dotted;
+  background: var(--accent-dark-green);
+}
+
+.model-li[data-has-error="true"],
+.model-li[data-has-error="true"] textarea {
+  background: var(--accent-dark-red);
 }
 
 .model-li .header {
