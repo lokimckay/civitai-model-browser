@@ -1,6 +1,7 @@
 ---
 import Main from "@/layouts/Main.astro";
 import Models from "@/components/models";
+import Search from "@/components/search";
 import "@/styles/main.css";
 ---
 
@@ -18,6 +19,7 @@ import "@/styles/main.css";
       label="Choose model directory"
     />
     <button>Choose model folder</button>
+    <Search client:visible />
     <Models client:visible />
   </main>
 </Main>

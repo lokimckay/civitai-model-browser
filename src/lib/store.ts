@@ -1,6 +1,8 @@
 import { persistentAtom, persistentMap } from "@nanostores/persistent";
 import type { Model, Progress } from "./types";
 import { computed } from "nanostores";
+import Fuse from "fuse.js";
+import { modelSearchKeys } from "@/components/search";
 
 const encDec = {
   encode: JSON.stringify,
@@ -8,16 +10,25 @@ const encDec = {
 };
 
 export const $models = persistentAtom<Model[]>("models", [], encDec);
-export const $sortedModels = computed($models, (models) =>
-  models.sort((a, b) => a.name.localeCompare(b.name))
-);
+export const $search = persistentAtom<string>("search", "");
 export const $hashes = persistentMap<Record<string, string>>("hashes: ", {});
-
 export const $progress = persistentMap<Progress>(
   "progress: ",
   { remaining: 0, current: null },
   encDec
 );
+export const $sortedModels = computed($models, (models) =>
+  models.sort((a, b) => a.name.localeCompare(b.name))
+);
+export const $searchResults = computed($search, (search) => {
+  const models = $models.get();
+  const fuse = new Fuse(models, {
+    keys: modelSearchKeys,
+    includeMatches: true,
+    threshold: 0.3,
+  });
+  return fuse.search(search);
+});
 
 export function getCachedHash(filename: string) {
   const hashes = $hashes.get();

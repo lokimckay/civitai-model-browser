@@ -18,6 +18,7 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "@types/wicg-file-system-access": "^2023.10.5",
     "astro": "^4.11.0",
+    "fuse.js": "^7.0.0",
     "idb-keyval": "^6.2.1",
     "nanostores": "^0.10.3",
     "preact": "^10.22.0",

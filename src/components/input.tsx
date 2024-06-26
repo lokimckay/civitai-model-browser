@@ -4,11 +4,11 @@ import "./input.css";
 interface Props extends HTMLAttributes<HTMLInputElement> {}
 
 export default function Input(props: Props) {
-  const { label, ...rest } = props;
+  const { label, id, ...rest } = props;
   return (
     <div class="input">
-      <label>{label}</label>
-      <input {...rest} />
+      {label && <label for={id}>{label}</label>}
+      <input id={id} {...rest} />
     </div>
   );
 }
