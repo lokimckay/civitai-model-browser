@@ -9,7 +9,7 @@ Runs in your browser, no data is uploaded
 
 - Conveniently see trigger words for your downloaded models
 - Don't need to rename downloaded files to be more descriptive anymore
-- Find duplicates of downloaded modelss
+- Find duplicates of downloaded models
 
 ## Roadmap
 

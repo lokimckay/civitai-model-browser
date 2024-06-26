@@ -4,7 +4,8 @@ import ModelListItem from "./modelListItem";
 import "./models.css";
 
 export default function Models() {
-  const models = useStore($models);
+  const _models = useStore($models);
+  const models = Object.values(_models);
   const search = useStore($search);
   const searchResults = useStore($searchResults);
   const progress = useStore($progress);

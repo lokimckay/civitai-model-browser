@@ -6,7 +6,7 @@ import "./model.css";
 export default function Model() {
   const queryId = new URLSearchParams(location.search).get("id");
   const models = useStore($models);
-  const data = models.find((model) => model.id === queryId);
+  const data = queryId && models[queryId];
 
   const {
     name: fileName,

@@ -1,5 +1,5 @@
 import { civitaiEndpoint } from "./config";
-import type { Model, ModelVersion } from "./types";
+import { pruneModelVersion, type Model, type ModelVersion } from "./types";
 import { createHash } from "sha256-uint8array";
 import { err } from "./util";
 
@@ -17,6 +17,7 @@ export function getHash(
 function getSmallHash(model: Model): Promise<string> {
   return new Promise(async (resolve, reject) => {
     try {
+      if (!model.localFile) return reject(err("model.localFile is undefined"));
       const buffer = await model.localFile.arrayBuffer();
       const hash = await crypto.subtle.digest("SHA-256", buffer);
       const asStr = Array.from(new Uint8Array(hash))
@@ -34,6 +35,7 @@ function getStreamedHash(
   onProgress?: (bytes: number) => void
 ): Promise<string> {
   return new Promise(async (resolve, reject) => {
+    if (!model.localFile) return reject(err("model.localFile is undefined"));
     let stream: ReadableStream | null = model.localFile.stream();
     let reader: ReadableStreamDefaultReader | null = stream.getReader();
     const hash = createHash();
@@ -75,7 +77,9 @@ export function getInfo(hash: string): Promise<ModelVersion> {
               : "Failed to retrieve info from Civitai",
           error: response.statusText,
         });
-      resolve(response.json());
+      const json = await response.json();
+      const pruned = pruneModelVersion(json);
+      resolve(pruned);
     } catch (error) {
       reject(err("Failed to retrieve info from Civitai", error));
     }

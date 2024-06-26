@@ -32,6 +32,7 @@ import "@/styles/main.css";
     cacheHash,
     updateModel,
   } from "@/lib/store";
+  import type { Model } from "@/lib/types";
 
   const button = document.querySelector("button");
   const input: HTMLElement | null = document.querySelector("#model-folder");
@@ -51,7 +52,10 @@ import "@/styles/main.css";
     if (!data) return;
     switch (data.type) {
       case "models":
-        $models.set(data.models);
+        data.models.forEach((m: Model) => {
+          delete m.localFile;
+          $models.setKey(m.id, m);
+        });
         $progress.setKey("remaining", data.models.length);
         break;
       case "processing":
@@ -63,7 +67,7 @@ import "@/styles/main.css";
         break;
       case "processed":
         $progress.setKey("remaining", $progress.get().remaining - 1);
-        const $model = $models.get().find((m) => m.id === data.model.id);
+        const $model = $models.get()[data.model.id];
         $model?.hash && cacheHash(data.model.localFile.name, $model.hash);
         break;
       default:

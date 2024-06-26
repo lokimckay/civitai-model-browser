@@ -9,8 +9,12 @@ const encDec = {
   decode: JSON.parse,
 };
 
-export const $models = persistentAtom<Model[]>("models", [], encDec);
 export const $search = persistentAtom<string>("search", "");
+export const $models = persistentMap<Record<string, Model>>(
+  "models: ",
+  {},
+  encDec
+);
 export const $hashes = persistentMap<Record<string, string>>("hashes: ", {});
 export const $progress = persistentMap<Progress>(
   "progress: ",
@@ -18,10 +22,10 @@ export const $progress = persistentMap<Progress>(
   encDec
 );
 export const $sortedModels = computed($models, (models) =>
-  models.sort((a, b) => a.name.localeCompare(b.name))
+  Object.values(models).sort((a, b) => a.name.localeCompare(b.name))
 );
 export const $searchResults = computed($search, (search) => {
-  const models = $models.get();
+  const models = Object.values($models.get());
   const fuse = new Fuse(models, fuseConfig);
   return fuse.search(search);
 });
@@ -38,19 +42,12 @@ export function cacheHash(filename: string, hash: string) {
 }
 
 export function updateModel(model: Partial<Model>) {
-  const models = $models.get();
-  const newModels = [...models];
-  const foundModel = models.find((m) => m.id === model.id);
-  const index = models.findIndex((m) => m.id === model.id);
+  if (!model.id) return console.error("Model id is required to updateModel");
+  const foundModel = $models.get()[model.id];
   if (!foundModel) return console.error(`Model ${model.id} not found`);
-  else {
-    const merged = Object.assign({}, foundModel, model);
-    const modelId = merged.info?.modelId;
-    if (modelId && merged.info)
-      merged.info.browseUrl = `https://civitai.com/models/${modelId}?modelVerionsId=${merged.info.id}`;
-
-    newModels[index] = merged;
-  }
-
-  $models.set(newModels);
+  const merged = Object.assign({}, foundModel, model);
+  const modelId = merged.info?.modelId;
+  if (modelId && merged.info)
+    merged.info.browseUrl = `https://civitai.com/models/${modelId}?modelVerionsId=${merged.info.id}`;
+  $models.setKey(model.id, merged);
 }

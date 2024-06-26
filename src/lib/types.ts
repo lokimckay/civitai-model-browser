@@ -3,7 +3,7 @@
 export type Model = {
   id: string;
   name: string;
-  localFile: File;
+  localFile?: File;
   path: string;
   size: number;
   hash?: string;
@@ -28,23 +28,11 @@ export type ModelVersion = {
   description: string;
   downloadUrl: string;
   browseUrl: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  status: string;
   trainedWords: string[];
   baseModel: number;
-  stats: Stats;
   model: RemoteModel;
   files: ModelArtifact[];
   images: Image[];
-};
-
-type Stats = {
-  downloadCount: number;
-  ratingCount: number;
-  rating: number;
-  thumbsUpCount: number;
 };
 
 type RemoteModel = {
@@ -57,9 +45,7 @@ type RemoteModel = {
     | "LORA"
     | "Controlnet"
     | "Poses";
-  nsfw: boolean; // not safe for work
-  poi: boolean; // person of interest
-  mode: string;
+  nsfw: boolean;
 };
 
 type ModelArtifact = {
@@ -69,12 +55,6 @@ type ModelArtifact = {
   sizeKB: number;
   name: string;
   type: string;
-  pickleScanResult: ScanResult;
-  pickleScanMessage: string;
-  virusScanResult: ScanResult;
-  virusScanMessage: string;
-  scannedAt: string;
-  metadata: { format: "SafeTensor" | "PickleTensor" | "Other" };
   hashes: { SHA256: string };
 };
 
@@ -82,20 +62,70 @@ type Image = {
   url: string;
   width: number;
   height: number;
-  hash: string;
   nsfwLevel: number;
-  meta: ImageMeta;
 };
 
-type ImageMeta = {
-  size: string;
-  seed: string;
-  steps: number;
-  prompt: string;
-  negativePrompt: string;
-  sampler: string;
-  cfgScale: number;
-  clipSkip: 2;
-};
+export function pruneModelVersion(rawModelVersion: any): ModelVersion {
+  const {
+    id,
+    air,
+    name,
+    description,
+    modelId,
+    downloadUrl,
+    browseUrl,
+    baseModel,
+    trainedWords,
+    model: _model,
+    files: _files,
+    images: _images,
+  } = rawModelVersion;
 
-type ScanResult = "Pending" | "Success" | "Danger" | "Error";
+  const { name: modelName, type, nsfw } = _model;
+  const model = { name: modelName, type, nsfw };
+
+  const files = _files.map(
+    ({
+      id,
+      primary,
+      downloadUrl,
+      sizeKB,
+      name,
+      type,
+      hashes,
+    }: any): ModelArtifact => ({
+      id,
+      primary,
+      downloadUrl,
+      sizeKB,
+      name,
+      type,
+      hashes: {
+        SHA256: hashes.SHA256,
+      },
+    })
+  );
+
+  const images = _images.map(
+    ({ url, width, height, nsfwLevel }: any): Image => ({
+      url,
+      width,
+      height,
+      nsfwLevel,
+    })
+  );
+  return {
+    id,
+    air,
+    name,
+    description,
+    modelId,
+    downloadUrl,
+    browseUrl,
+    baseModel,
+    trainedWords,
+    model,
+    files,
+    images,
+  };
+}
