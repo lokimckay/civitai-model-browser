@@ -19,3 +19,6 @@
 - [ ] fuzzy search
 - [ ] copy buttons
 - [ ] grid view
+- [ ] allow skipping of hashing
+- [ ] cache hash to disk
+- [ ] limit number of subworkers running at once

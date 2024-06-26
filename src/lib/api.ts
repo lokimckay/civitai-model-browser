@@ -3,19 +3,16 @@ import type { Model, ModelVersion } from "./types";
 import { err } from "./util";
 import { createHash } from "sha256-uint8array";
 
-/*
-  Files larger than 2GB can't be converted to arrayBuffers in Chrome (https://issues.chromium.org/issues/40055619)
-  Use a readable stream instead
-*/
 export function getHash(
   model: Model,
   onProgress?: (bytes: number) => void
 ): Promise<string> {
   const twoGigabytes = 2 * 1024 * 1024 * 1024;
-  if (model.size > twoGigabytes) return getLargeHash(model, onProgress);
+  if (model.size > twoGigabytes) return getStreamedHash(model, onProgress);
   else return getSmallHash(model);
 }
 
+// Only works for files under 2GB (https://issues.chromium.org/issues/40055619)
 function getSmallHash(model: Model): Promise<string> {
   return new Promise(async (resolve, reject) => {
     try {
@@ -31,7 +28,30 @@ function getSmallHash(model: Model): Promise<string> {
   });
 }
 
+// Chunked slices but not streamed (just as slow as stream I think)
 function getLargeHash(
+  model: Model,
+  onProgress?: (bytes: number) => void
+): Promise<string> {
+  const oneFiveGig = 1.5 * 1024 * 1024 * 1024;
+  return new Promise(async (resolve, reject) => {
+    let cursor = 0;
+    const size = model.localFile.size;
+    const hash = createHash();
+    while (cursor < size) {
+      const blob = model.localFile.slice(cursor, cursor + oneFiveGig);
+      const buffer = await blob.arrayBuffer();
+      hash.update(new Uint8Array(buffer));
+      cursor += oneFiveGig;
+      if (typeof onProgress === "function") onProgress(cursor);
+    }
+
+    resolve(hash.digest("hex"));
+  });
+}
+
+// Slower? don't think so
+function getStreamedHash(
   model: Model,
   onProgress?: (bytes: number) => void
 ): Promise<string> {

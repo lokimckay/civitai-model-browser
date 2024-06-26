@@ -20,12 +20,9 @@ export default function ModelListItem({ model: data }: { model: Model }) {
   const hasTriggers =
     type === "LORA" && trainedWords && trainedWords.length > 0;
 
-  const bytesProgess = hashedBytes
-    ? ` (${Math.round(hashedBytes / 1024 / 1000)} MB / ${Math.round(
-        size / 1024 / 1000
-      )} MB)`
-    : "";
-
+  const bytesProgess = ` (${Math.round(
+    hashedBytes ? hashedBytes / 1024 / 1000 : 0
+  )} MB / ${Math.round(size / 1024 / 1000)} MB)`;
   return (
     <div
       class="model-li"
@@ -51,7 +48,11 @@ export default function ModelListItem({ model: data }: { model: Model }) {
       </div>
       {loading ? (
         `⌛ ${
-          hashing ? `hashing${bytesProgess}` : fetching ? "fetching" : "queued"
+          hashing
+            ? `calculating hash${bytesProgess}`
+            : fetching
+            ? "downloading info"
+            : "queued"
         }`
       ) : (
         <h3>

@@ -1,7 +1,6 @@
 import { modelExtensions } from "@/lib/config";
 import { type Model } from "@/lib/types";
 import { createId } from "@paralleldrive/cuid2";
-import { getInfo, getHash } from "@/lib/api";
 
 addEventListener("message", (event) => {
   if (!(event.data instanceof FileList))
@@ -23,43 +22,53 @@ addEventListener("message", (event) => {
       };
     });
 
-  postMessage({ type: "models", models });
   const sorted = models.sort((a, b) => a.name.localeCompare(b.name));
-  processModels(sorted);
-});
+  postMessage({ type: "models", models: sorted });
 
-function postUpdate(data: any) {
-  postMessage({ type: "updateModel", ...data });
-}
+  let subworkers = [];
+  let pendingWorkers = [];
+  const maxActiveWorkers = 2; // TODO expose setting
+  for (const model of sorted) {
+    const subworker = new Worker(new URL("./subworker.ts", import.meta.url), {
+      type: "module",
+    });
+    subworker.addEventListener("message", (event) => {
+      switch (event.data.type) {
+        case "processed":
+          // Remove worker from subworkers array
+          const worker = subworkers.find(
+            ({ model }) => model.id === event.data.model.id
+          );
+          const wIdx = worker && subworkers.indexOf(worker);
+          worker?.subworker.terminate();
+          wIdx && subworkers.splice(wIdx, 1);
 
-async function processModels(models: Model[]) {
-  for (const model of models) {
-    postMessage({ type: "processing", model });
-    const { id } = model;
+          // Remove worker from pendingWorkers array
+          const pWorker = pendingWorkers.find(
+            ({ model }) => model.id === event.data.model.id
+          );
+          const pIdx = pWorker && pendingWorkers.indexOf(pWorker);
+          pIdx && pendingWorkers.splice(pIdx, 1);
 
-    postUpdate({ id, hashing: true });
-    const hash = await getHash(model, (hashedBytes) =>
-      postUpdate({ id, hashedBytes })
-    )
-      .then((hash) => {
-        postUpdate({ id, hash, hashing: false });
-        return hash;
-      })
-      .catch((error) => {
-        postUpdate({ id, error, hashing: false });
-      });
+          // If there are still pending workers, start the next one
+          const nextWorker = pendingWorkers.shift();
+          nextWorker?.subworker.postMessage(nextWorker.model);
 
-    if (!hash) continue;
-
-    postUpdate({ id, fetching: true });
-    await getInfo(hash)
-      .then((info) => {
-        postUpdate({ id, info, fetching: false });
-      })
-      .catch((error) => {
-        postUpdate({ id, error, fetching: false });
-      });
-
-    postMessage({ type: "processed", model });
+          postMessage(event.data);
+          break;
+        default:
+          postMessage(event.data);
+      }
+    });
+    subworkers.push({ model, subworker });
+    pendingWorkers.push({ model, subworker });
   }
-}
+
+  for (const model of sorted.slice(0, maxActiveWorkers)) {
+    const { subworker } =
+      subworkers.find((sw) => sw.model.id === model.id) || {};
+    if (!subworker) return;
+    subworker.postMessage(model);
+    pendingWorkers.shift();
+  }
+});
