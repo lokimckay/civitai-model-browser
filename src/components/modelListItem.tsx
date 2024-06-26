@@ -18,6 +18,8 @@ export default function ModelListItem({ model: data }: { model: Model }) {
   const { name: modelName, type, nsfw } = model || {};
   const queued = !(fetching === false) || !(hashing === false);
   const loading = fetching || hashing;
+  const success = !queued && !loading && !error;
+  const statusEmoji = error ? "❌" : fetching ? "📨" : hashing ? "⚙️" : "⏳";
   const hasTriggers =
     type !== "Checkpoint" && trainedWords && trainedWords.length > 0;
 
@@ -35,6 +37,7 @@ export default function ModelListItem({ model: data }: { model: Model }) {
   return (
     <li
       class="model-li"
+      data-success={success}
       data-is-queued={queued}
       data-is-loading={loading}
       data-has-error={!!error}
@@ -51,7 +54,7 @@ export default function ModelListItem({ model: data }: { model: Model }) {
         </div>
       )}
       <div class="content">
-        {!error && (
+        {!queued && !error && (
           <div class="header">
             <div>
               <span class="type">{type}</span>
@@ -69,24 +72,19 @@ export default function ModelListItem({ model: data }: { model: Model }) {
             )}
           </div>
         )}
-        {loading ? (
-          <code>
-            {hashing
-              ? `⚙️ Calculating hash${bytesProgess}`
-              : fetching
-              ? "📨 Downloading info"
-              : "⏳ Queued"}
-          </code>
-        ) : (
-          <h3 class="truncate">
-            {error && `❌ `}
-            <a href={`./model?id=${id}`}>{error ? fileName : title}</a>
-          </h3>
+        <h3 class="truncate">
+          {!success && `${statusEmoji} `}
+          <a href={`./model?id=${id}`}>{error ? fileName : title}</a>
+        </h3>
+        {loading && (
+          <span>
+            {hashing ? `Calculating hash${bytesProgess}` : "Downloading info"}
+          </span>
         )}
 
         <div class="fields">
           {error && <span>{error.message}</span>}
-          {!error && (
+          {success && (
             <>
               <span>Filename:</span>
               <span>{fileName}</span>

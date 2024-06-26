@@ -9,21 +9,26 @@ export default function Model() {
   const data = models.find((model) => model.id === queryId);
 
   const {
-    id,
     name: fileName,
-    hashing,
-    fetching,
     info: modelVersion,
     error,
+    fetching,
+    hashing,
   } = data || {};
-  const { name, model, browseUrl, trainedWords } = modelVersion || {};
-  const { name: modelName, type, nsfw } = model || {};
+  const { name, model, trainedWords } = modelVersion || {};
+  const { name: modelName, type } = model || {};
+  const queued = !(fetching === false) || !(hashing === false);
+  const loading = fetching || hashing;
+  const success = !queued && !loading && !error;
+  const statusEmoji = error ? "❌" : "⏳";
   const hasTriggers =
     type === "LORA" && trainedWords && trainedWords.length > 0;
 
   return (
     <div class="model-info">
-      <h1>{!error ? `${modelName} - ${name}` : `❌ ${fileName}`}</h1>
+      <h1>
+        {success ? `${modelName} - ${name}` : `${statusEmoji} ${fileName}`}
+      </h1>
 
       <ul class="fields">
         <Input
