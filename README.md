@@ -5,7 +5,11 @@
 Displays Civitai info for your locally downloaded models  
 Runs in your browser, no data is uploaded
 
-Useful for finding trigger words & model info of your forgotten LoRAs
+## Benefits
+
+- Conveniently see trigger words for your downloaded models
+- Don't need to rename downloaded files to be more descriptive anymore
+- Find duplicates of downloaded modelss
 
 ## Roadmap
 

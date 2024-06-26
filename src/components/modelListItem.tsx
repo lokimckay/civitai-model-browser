@@ -14,7 +14,8 @@ export default function ModelListItem({ model: data }: { model: Model }) {
     hashedBytes,
     error,
   } = data || {};
-  const { name, model, browseUrl, trainedWords, images } = modelVersion || {};
+  const { name, model, baseModel, browseUrl, trainedWords, images } =
+    modelVersion || {};
   const { name: modelName, type, nsfw } = model || {};
   const queued = !(fetching === false) || !(hashing === false);
   const loading = fetching || hashing;
@@ -58,6 +59,12 @@ export default function ModelListItem({ model: data }: { model: Model }) {
           <div class="header">
             <div>
               <span class="type">{type}</span>
+              {baseModel && (
+                <>
+                  {" "}
+                  &middot; <span>{baseModel}</span>
+                </>
+              )}
               {nsfw && (
                 <>
                   {" "}
