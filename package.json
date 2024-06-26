@@ -19,12 +19,13 @@
     "astro": "^4.11.0",
     "fuse.js": "^7.0.0",
     "idb-keyval": "^6.2.1",
+    "lodash.debounce": "^4.0.8",
     "nanostores": "^0.10.3",
     "preact": "^10.22.0",
     "sha256-uint8array": "^0.10.7",
     "typescript": "^5.5.2"
   },
   "devDependencies": {
-    "@types/crypto-js": "^4.2.2"
+    "@types/lodash.debounce": "^4.0.9"
   }
 }
