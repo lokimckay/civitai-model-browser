@@ -10,7 +10,9 @@ export default function Models() {
   const { remaining } = progress;
 
   const modelList =
-    searchResults.length > 0 ? searchResults.map((r) => r.item) : models;
+    searchResults && searchResults.length > 0
+      ? searchResults.map((r) => r.item)
+      : models;
 
   return (
     <>
