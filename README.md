@@ -15,18 +15,18 @@ Useful for finding trigger words & model info of your forgotten LoRAs
 - [x] limit number of subworkers running at once
 - [x] preview images
 - [x] fuzzy search
-- [ ] share project
+- [x] share project
+- [ ] save to origin file system (for hashes & collections & notes)
+- [ ] read hash from adjacent .sha256 file if it exists
+- [ ] export hash files
+- [ ] back to top button
 - [ ] grid view
 - [ ] copy buttons
 - [ ] cycle preview images
-- [ ] OOM issue
 - [ ] hide error results
 - [ ] expose model extensions as setting
 - [ ] expose concurrent workers setting
-- [ ] read hash from adjacent .sha256 file if it exists
-- [ ] export hash files
 - [ ] allow skipping of specific models
-- [ ] save to origin file system (for hashes & collections & notes)
 - [ ] export all origin file system data
 - [ ] favorites/collections
 - [ ] notes
