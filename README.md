@@ -1,5 +1,7 @@
 # Civitai Model Browser
 
+[lokimckay.github.io/civitai-model-browser/](https://lokimckay.github.io/civitai-model-browser/)
+
 Displays Civitai info for your locally downloaded models  
 Runs in your browser, no data is uploaded
 
@@ -13,7 +15,7 @@ Useful for finding trigger words & model info of your forgotten LoRAs
 - [x] limit number of subworkers running at once
 - [x] preview images
 - [x] fuzzy search
-- [ ] share this project to community
+- [ ] share project
 - [ ] grid view
 - [ ] copy buttons
 - [ ] cycle preview images

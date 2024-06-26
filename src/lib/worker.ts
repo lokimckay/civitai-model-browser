@@ -1,7 +1,6 @@
-import { modelExtensions } from "@/lib/config";
-import { type Model } from "@/lib/types";
+import { modelExtensions } from "./config";
+import { type Model } from "./types";
 import { createId } from "@paralleldrive/cuid2";
-import { cacheHash, getCachedHash } from "./store";
 
 addEventListener("message", (event) => {
   if (!(event.data.files instanceof FileList))
@@ -36,7 +35,7 @@ addEventListener("message", (event) => {
   let pendingWorkers = [];
 
   for (const model of sorted) {
-    const subworker = new Worker(new URL("./subworker.ts", import.meta.url), {
+    const subworker = new Worker(new URL("./subworker", import.meta.url), {
       type: "module",
     });
     subworker.addEventListener("message", (event) => {

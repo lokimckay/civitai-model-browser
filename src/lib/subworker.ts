@@ -1,5 +1,5 @@
-import { type Model } from "@/lib/types";
-import { getInfo, getHash } from "@/lib/api";
+import { type Model } from "./types";
+import { getInfo, getHash } from "./api";
 
 addEventListener("message", (event: MessageEvent<Model>) => {
   if (!event.data.id)
