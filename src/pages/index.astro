@@ -23,7 +23,13 @@ import "@/styles/main.css";
 </Main>
 
 <script>
-  import { $models, $progress, updateModel } from "@/lib/store";
+  import {
+    $models,
+    $progress,
+    $hashes,
+    cacheHash,
+    updateModel,
+  } from "@/lib/store";
 
   const button = document.querySelector("button");
   const input: HTMLElement | null = document.querySelector("#model-folder");
@@ -31,7 +37,10 @@ import "@/styles/main.css";
 
   button?.addEventListener("click", () => input!.click());
   input?.addEventListener("change", (event) =>
-    worker.postMessage((event.target as HTMLInputElement).files)
+    worker.postMessage({
+      files: (event.target as HTMLInputElement).files,
+      hashCache: $hashes.get(),
+    })
   );
   worker.addEventListener("message", (event) => {
     const { data } = event || {};
@@ -50,6 +59,8 @@ import "@/styles/main.css";
         break;
       case "processed":
         $progress.setKey("remaining", $progress.get().remaining - 1);
+        const $model = $models.get().find((m) => m.id === data.model.id);
+        $model?.hash && cacheHash(data.model.localFile.name, $model.hash);
         break;
       default:
         console.error("Unknown message type", event.data.type);

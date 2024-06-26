@@ -15,10 +15,10 @@
 
 - [x] more info pages
 - [x] deploy
+- [ ] cache hash to disk
 - [ ] images
 - [ ] fuzzy search
 - [ ] copy buttons
 - [ ] grid view
 - [ ] allow skipping of hashing
-- [ ] cache hash to disk
 - [ ] limit number of subworkers running at once

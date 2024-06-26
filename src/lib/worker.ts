@@ -1,11 +1,14 @@
 import { modelExtensions } from "@/lib/config";
 import { type Model } from "@/lib/types";
 import { createId } from "@paralleldrive/cuid2";
+import { cacheHash, getCachedHash } from "./store";
 
 addEventListener("message", (event) => {
-  if (!(event.data instanceof FileList))
+  if (!(event.data.files instanceof FileList))
     return console.error("Worker received invalid data", event.data);
-  const fileList: FileList = event.data;
+  const fileList: FileList = event.data.files;
+  const hashCache = event.data.hashCache;
+
   const models = Array.from(fileList)
     .filter((file) => {
       const ext = file.name.split(".").pop();
@@ -13,13 +16,17 @@ addEventListener("message", (event) => {
     })
     .map((file: File): Model => {
       const { name, webkitRelativePath, size } = file;
-      return {
+      const hash = hashCache[name];
+      const returnObj = {
         id: createId(),
         name,
         path: webkitRelativePath,
         size,
+        hash,
         localFile: file,
       };
+      if (!hash) delete returnObj.hash;
+      return returnObj;
     });
 
   const sorted = models.sort((a, b) => a.name.localeCompare(b.name));
@@ -27,7 +34,7 @@ addEventListener("message", (event) => {
 
   let subworkers = [];
   let pendingWorkers = [];
-  const maxActiveWorkers = 2; // TODO expose setting
+
   for (const model of sorted) {
     const subworker = new Worker(new URL("./subworker.ts", import.meta.url), {
       type: "module",
@@ -64,6 +71,7 @@ addEventListener("message", (event) => {
     pendingWorkers.push({ model, subworker });
   }
 
+  const maxActiveWorkers = 2; // TODO expose setting
   for (const model of sorted.slice(0, maxActiveWorkers)) {
     const { subworker } =
       subworkers.find((sw) => sw.model.id === model.id) || {};

@@ -1,5 +1,5 @@
 import { persistentAtom, persistentMap } from "@nanostores/persistent";
-import type { Model, ModelVersion, Progress } from "./types";
+import type { Model, Progress } from "./types";
 import { computed } from "nanostores";
 
 const encDec = {
@@ -11,12 +11,24 @@ export const $models = persistentAtom<Model[]>("models", [], encDec);
 export const $sortedModels = computed($models, (models) =>
   models.sort((a, b) => a.name.localeCompare(b.name))
 );
+export const $hashes = persistentMap<Record<string, string>>("hashes: ", {});
 
 export const $progress = persistentMap<Progress>(
-  "progress",
+  "progress: ",
   { remaining: 0, current: null },
   encDec
 );
+
+export function getCachedHash(filename: string) {
+  const hashes = $hashes.get();
+  return hashes[filename];
+}
+
+export function cacheHash(filename: string, hash: string) {
+  const hashes = $hashes.get();
+  hashes[filename] = hash;
+  $hashes.set(hashes);
+}
 
 export function updateModel(model: Partial<Model>) {
   const models = $models.get();

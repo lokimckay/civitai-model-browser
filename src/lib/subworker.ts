@@ -17,6 +17,7 @@ async function processModel(model: Model) {
   const { id } = model;
 
   postUpdate({ id, hashing: true });
+
   const hash = await getHash(model, (hashedBytes) =>
     postUpdate({ id, hashedBytes })
   )

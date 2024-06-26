@@ -10,7 +10,7 @@ export default function Models() {
 
   return (
     <>
-      <div>{remaining} remaining</div>
+      {remaining > 0 && <div class="progress">{remaining} remaining</div>}
       <ul class="list">
         {models.map((model) => (
           <li key={model.id}>

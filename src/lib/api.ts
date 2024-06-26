@@ -7,6 +7,7 @@ export function getHash(
   model: Model,
   onProgress?: (bytes: number) => void
 ): Promise<string> {
+  if (model.hash) return Promise.resolve(model.hash); // cached hash
   const twoGigabytes = 2 * 1024 * 1024 * 1024;
   if (model.size > twoGigabytes) return getStreamedHash(model, onProgress);
   else return getSmallHash(model);

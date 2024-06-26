@@ -5,3 +5,7 @@ ul.list {
   display: grid;
   row-gap: 1em;
 }
+
+.progress {
+  margin-top: 1em;
+}
