@@ -1,18 +1,17 @@
-import { $models, $searchResults, $progress } from "../lib/store";
+import { $models, $searchResults, $search, $progress } from "../lib/store";
 import { useStore } from "@nanostores/preact";
 import ModelListItem from "./modelListItem";
 import "./models.css";
 
 export default function Models() {
   const models = useStore($models);
+  const search = useStore($search);
   const searchResults = useStore($searchResults);
   const progress = useStore($progress);
   const { remaining } = progress;
 
   const modelList =
-    searchResults && searchResults.length > 0
-      ? searchResults.map((r) => r.item)
-      : models;
+    search !== "" && searchResults ? searchResults.map((r) => r.item) : models;
 
   return (
     <>
