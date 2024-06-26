@@ -35,7 +35,9 @@ import "@/styles/main.css";
 
   const button = document.querySelector("button");
   const input: HTMLElement | null = document.querySelector("#model-folder");
-  const worker = new Worker("../lib/worker", { type: "module" });
+  const worker = new Worker(new URL("../lib/worker", import.meta.url), {
+    type: "module",
+  });
 
   button?.addEventListener("click", () => input!.click());
   input?.addEventListener("change", (event) =>

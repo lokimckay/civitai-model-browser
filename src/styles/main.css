@@ -12,10 +12,12 @@
   --accent-purple: #9c69ff;
   --accent-purple-hover: rgba(156, 105, 255, 0.5);
   --accent-blue: #016eda;
-  --accent-blue-hover: #1c74dc;
   --accent-dark-blue: #0d0e21;
   --accent-dark-red: #301a00;
   --accent-dark-green: #00301a;
+
+  --link-color: var(--accent-blue);
+  --link-color-hover: #1c74dc;
 }
 
 * {
@@ -100,18 +102,18 @@ ul:not(.list) {
 
 /* Links and nav */
 a {
-  color: var(--accent-blue);
+  color: var(--link-color);
   text-decoration: none;
 }
 a:visited {
   color: var(--accent-purple);
 }
 nav a:visited {
-  color: var(--accent-blue);
+  color: var(--link-color);
 }
 a:hover,
 nav a:hover {
-  color: var(--accent-blue-hover);
+  color: var(--link-color-hover);
   text-underline-offset: 0.1em;
 }
 a:hover {
@@ -129,6 +131,12 @@ nav {
 nav ul {
   display: flex;
   gap: 1em;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Buttons */

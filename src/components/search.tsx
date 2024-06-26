@@ -19,16 +19,3 @@ export default function Search() {
     </>
   );
 }
-
-export const modelSearchKeys = [
-  "name",
-  "hash",
-  "path",
-  "info.air",
-  "info.baseModel",
-  "info.description",
-  "info.id",
-  "info.modelId",
-  "info.name",
-  "info.trainedWords",
-];

@@ -1,8 +1,8 @@
 import { persistentAtom, persistentMap } from "@nanostores/persistent";
 import type { Model, Progress } from "./types";
+import { fuseConfig } from "@/lib/config";
 import { computed } from "nanostores";
 import Fuse from "fuse.js";
-import { modelSearchKeys } from "@/components/search";
 
 const encDec = {
   encode: JSON.stringify,
@@ -22,11 +22,7 @@ export const $sortedModels = computed($models, (models) =>
 );
 export const $searchResults = computed($search, (search) => {
   const models = $models.get();
-  const fuse = new Fuse(models, {
-    keys: modelSearchKeys,
-    includeMatches: true,
-    threshold: 0.3,
-  });
+  const fuse = new Fuse(models, fuseConfig);
   return fuse.search(search);
 });
 

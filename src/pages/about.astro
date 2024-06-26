@@ -1,0 +1,22 @@
+---
+import Main from "@/layouts/Main.astro";
+import ModelInfo from "@/components/model";
+---
+
+<Main title="About">
+  <main>
+    <h1>About</h1>
+    <p>Displays Civitai info for your locally downloaded models</p>
+    <p>Runs in your browser, no data is uploaded</p>
+    <h2>Limitations</h2>
+    <ul class="list">
+      <li>
+        Most browsers only allows grabbing file array buffers <a
+          href="https://issues.chromium.org/issues/40055619">under 2GB</a
+        >
+        . It is still possible to hash larger files, but they must be streamed, which
+        is a bit slower.
+      </li>
+    </ul>
+  </main>
+</Main>

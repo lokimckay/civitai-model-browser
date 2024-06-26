@@ -1,15 +1,9 @@
 # Civitai Model Browser
 
-🚧 Currently under development
+Displays Civitai info for your locally downloaded models  
+Runs in your browser, no data is uploaded
 
-## Explorer Flow
-
-1. User supplies model directory (tabbed)
-1. User clicks "load" button
-1. Tool reads directory and hahes all files into local storage
-1. Tool queries [/models-versions/by-hash/:hash](https://wiki.civitai.com/wiki/Civitai_API#GET_/api/v1/models-versions/by-hash/:hash)
-1. Tool saves returned data to local storage
-1. Tool displays relevant data
+Useful for finding trigger words & model info of your forgotten LoRAs
 
 ## Roadmap
 
@@ -18,8 +12,19 @@
 - [x] cache hash
 - [x] limit number of subworkers running at once
 - [x] preview images
-- [ ] fuzzy search
-- [ ] cycle preview images
-- [ ] copy buttons
+- [x] fuzzy search
+- [ ] share this project to community
 - [ ] grid view
-- [ ] allow skipping of hashing
+- [ ] copy buttons
+- [ ] cycle preview images
+- [ ] OOM issue
+- [ ] hide error results
+- [ ] expose model extensions as setting
+- [ ] expose concurrent workers setting
+- [ ] read hash from adjacent .sha256 file if it exists
+- [ ] export hash files
+- [ ] allow skipping of specific models
+- [ ] save to origin file system (for hashes & collections & notes)
+- [ ] export all origin file system data
+- [ ] favorites/collections
+- [ ] notes
