@@ -15,7 +15,11 @@ export default function Models() {
 
   return (
     <>
-      {remaining > 0 && <div class="progress">{remaining} remaining</div>}
+      {remaining > 0 && (
+        <div class="progress">
+          Processed {models.length - remaining} / {models.length} models
+        </div>
+      )}
       <ul class="list">
         {modelList.map((model) => (
           <ModelListItem key={model.id} model={model} />
