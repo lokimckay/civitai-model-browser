@@ -9,7 +9,7 @@ const encDec = {
   decode: JSON.parse,
 };
 
-export const $search = persistentAtom<string>("search", "");
+export const $search = persistentAtom<string>("search: ", "");
 export const $models = persistentMap<Record<string, Model>>(
   "models: ",
   {},

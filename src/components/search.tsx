@@ -1,20 +1,28 @@
-import { useStore } from "@nanostores/preact";
+// import { useStore } from "@nanostores/preact";
 import { $search } from "@/lib/store";
-import Input from "./input";
+import { useSignal } from "@preact/signals";
+import { useEffect, useMemo } from "preact/hooks";
 import debounce from "lodash.debounce";
+import Input from "./input";
 import "./search.css";
-import { useMemo } from "preact/hooks";
 
 export default function Search() {
-  const search = useStore($search);
+  // const search = useStore($search);
+  const searchSig = useSignal(""); // Workaround - this shouldn't be needed. search useStore was no populating the input on page load for some reason
 
   const onInput = useMemo(
     () =>
       debounce((event: Event) => {
-        $search.set((event.target as HTMLInputElement).value);
+        const val = (event.target as HTMLInputElement).value;
+        $search.set(val);
+        searchSig.value = val;
       }, 300),
     []
   );
+
+  useEffect(() => {
+    searchSig.value = $search.get();
+  }, [$search]);
 
   return (
     <>
@@ -22,7 +30,7 @@ export default function Search() {
         type="search"
         class="search"
         placeholder="Search"
-        value={search}
+        value={searchSig}
         onInput={onInput}
       />
     </>
