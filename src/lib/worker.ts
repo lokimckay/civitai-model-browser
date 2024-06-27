@@ -20,6 +20,7 @@ addEventListener("message", (event) => {
         id: createId(),
         name,
         path: webkitRelativePath,
+        extension: name.split(".").pop() || "",
         size,
         hash,
         localFile: file,
@@ -31,51 +32,37 @@ addEventListener("message", (event) => {
   const sorted = models.sort((a, b) => a.name.localeCompare(b.name));
   postMessage({ type: "models", models: sorted });
 
-  let subworkers = [];
-  let pendingWorkers = [];
+  let pendingModels = [...sorted];
 
-  for (const model of sorted) {
+  const maxActiveWorkers = 2; // TODO expose as setting
+  for (let i = 0; i < maxActiveWorkers; i++) {
     const subworker = new Worker(new URL("./subworker", import.meta.url), {
       type: "module",
     });
+
     subworker.addEventListener("message", (event) => {
       switch (event.data.type) {
         case "processed":
-          // Remove worker from subworkers array
-          const worker = subworkers.find(
-            ({ model }) => model.id === event.data.model.id
+          // Remove model from pendingModels array
+          const doneModel = pendingModels.find(
+            (m) => m.id === event.data.model.id
           );
-          const wIdx = worker && subworkers.indexOf(worker);
-          worker?.subworker.terminate();
-          wIdx && subworkers.splice(wIdx, 1);
+          const index = doneModel && pendingModels.indexOf(doneModel);
+          index && pendingModels.splice(index, 1);
 
-          // Remove worker from pendingWorkers array
-          const pWorker = pendingWorkers.find(
-            ({ model }) => model.id === event.data.model.id
-          );
-          const pIdx = pWorker && pendingWorkers.indexOf(pWorker);
-          pIdx && pendingWorkers.splice(pIdx, 1);
+          // If there are still pending models, start the next one
+          const nextModel = pendingModels.shift();
+          nextModel && subworker.postMessage(nextModel);
 
-          // If there are still pending workers, start the next one
-          const nextWorker = pendingWorkers.shift();
-          nextWorker?.subworker.postMessage(nextWorker.model);
-
-          postMessage(event.data);
+          // Terminate this subworker if there are no more models to process
+          if (!nextModel) subworker.terminate();
+          postMessage(event.data); // Forward this event to worker creator
           break;
         default:
           postMessage(event.data);
       }
     });
-    subworkers.push({ model, subworker });
-    pendingWorkers.push({ model, subworker });
-  }
 
-  const maxActiveWorkers = 2; // TODO expose setting
-  for (const model of sorted.slice(0, maxActiveWorkers)) {
-    const { subworker } =
-      subworkers.find((sw) => sw.model.id === model.id) || {};
-    if (!subworker) return;
-    subworker.postMessage(model);
-    pendingWorkers.shift();
+    subworker.postMessage(pendingModels[i]); // Start the subworker
   }
 });

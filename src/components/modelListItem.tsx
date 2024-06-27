@@ -1,7 +1,6 @@
 import type { Model } from "@/lib/types";
 import NewTab from "@/lib/svg/newTab";
 import "./modelListItem.css";
-import TextArea from "./textarea";
 
 export default function ModelListItem({ model: data }: { model: Model }) {
   const {

@@ -1,5 +1,5 @@
 import { type Model } from "./types";
-import { getInfo, getHash } from "./api";
+import { getInfo, getHash, tryMetadataHash } from "./api";
 
 addEventListener("message", (event: MessageEvent<Model>) => {
   if (!event.data.id)
@@ -17,6 +17,12 @@ async function processModel(model: Model) {
   const { id } = model;
 
   postUpdate({ id, hashing: true });
+  const metaHash = await tryMetadataHash(model).catch((_e) => {});
+  if (metaHash) {
+    postUpdate({ id, ...metaHash, hashing: false, fetching: false });
+    postMessage({ type: "processed", model });
+    return;
+  }
 
   const hash = await getHash(model, (hashedBytes) =>
     postUpdate({ id, hashedBytes })

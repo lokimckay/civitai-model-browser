@@ -5,6 +5,7 @@ export type Model = {
   name: string;
   localFile?: File;
   path: string;
+  extension: string;
   size: number;
   hash?: string;
   hashing?: boolean;
@@ -35,7 +36,16 @@ export type ModelVersion = {
   images: Image[];
 };
 
-type RemoteModel = {
+export type SafeTensorMetadata = {
+  __metadata__: {
+    sshs_model_hash: string;
+    sshs_legacy_hash: string;
+    ss_sd_model_hash: string;
+    ss_new_sd_model_hash: string;
+  };
+};
+
+export type RemoteModel = {
   name: string;
   type:
     | "Checkpoint"
@@ -48,84 +58,19 @@ type RemoteModel = {
   nsfw: boolean;
 };
 
-type ModelArtifact = {
+export type ModelArtifact = {
   id: number;
   primary: boolean;
   downloadUrl: string;
   sizeKB: number;
   name: string;
   type: string;
-  hashes: { SHA256: string };
+  hashes: { SHA256: string; AUTOV3: string };
 };
 
-type Image = {
+export type Image = {
   url: string;
   width: number;
   height: number;
   nsfwLevel: number;
 };
-
-export function pruneModelVersion(rawModelVersion: any): ModelVersion {
-  const {
-    id,
-    air,
-    name,
-    description,
-    modelId,
-    downloadUrl,
-    browseUrl,
-    baseModel,
-    trainedWords,
-    model: _model,
-    files: _files,
-    images: _images,
-  } = rawModelVersion;
-
-  const { name: modelName, type, nsfw } = _model;
-  const model = { name: modelName, type, nsfw };
-
-  const files = _files.map(
-    ({
-      id,
-      primary,
-      downloadUrl,
-      sizeKB,
-      name,
-      type,
-      hashes,
-    }: any): ModelArtifact => ({
-      id,
-      primary,
-      downloadUrl,
-      sizeKB,
-      name,
-      type,
-      hashes: {
-        SHA256: hashes.SHA256,
-      },
-    })
-  );
-
-  const images = _images.map(
-    ({ url, width, height, nsfwLevel }: any): Image => ({
-      url,
-      width,
-      height,
-      nsfwLevel,
-    })
-  );
-  return {
-    id,
-    air,
-    name,
-    description,
-    modelId,
-    downloadUrl,
-    browseUrl,
-    baseModel,
-    trainedWords,
-    model,
-    files,
-    images,
-  };
-}

@@ -20,6 +20,7 @@ Runs in your browser, no data is uploaded
 - [x] preview images
 - [x] fuzzy search
 - [x] share project
+- [ ] use dexie instead of localstorage (10MB limit in localstorage, indexeddb much larger)
 - [ ] save to origin file system (for hashes & collections & notes)
 - [ ] read hash from adjacent .sha256 file if it exists
 - [ ] export hash files

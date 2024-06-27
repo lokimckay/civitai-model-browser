@@ -40,7 +40,11 @@ import "@/styles/main.css";
     type: "module",
   });
 
-  button?.addEventListener("click", () => input!.click());
+  button?.addEventListener("click", () => {
+    $models.set({});
+    $progress.set({ current: "", remaining: 0 });
+    input!.click();
+  });
   input?.addEventListener("change", (event) =>
     worker.postMessage({
       files: (event.target as HTMLInputElement).files,

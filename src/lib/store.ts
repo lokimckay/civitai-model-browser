@@ -30,11 +30,6 @@ export const $searchResults = computed($search, (search) => {
   return fuse.search(search);
 });
 
-export function getCachedHash(filename: string) {
-  const hashes = $hashes.get();
-  return hashes[filename];
-}
-
 export function cacheHash(filename: string, hash: string) {
   const hashes = $hashes.get();
   hashes[filename] = hash;
