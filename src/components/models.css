@@ -8,3 +8,18 @@ ul.list {
 .progress {
   margin-top: 1em;
 }
+
+ul.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--gi-width, 10em), 1fr));
+  border-left: 0;
+  border-right: 0;
+}
+ul.grid[data-has-items="true"] {
+  border: 2px solid var(--lighter);
+}
+ul.grid.full-width {
+  position: absolute;
+  left: 0;
+  right: 0;
+}

@@ -1,6 +1,6 @@
 .search {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin: 1em 0;
   width: 100%;
 }

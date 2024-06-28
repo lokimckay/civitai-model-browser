@@ -41,18 +41,18 @@ import "@/styles/main.css";
     type: "module",
   });
 
-  button?.addEventListener("click", () => {
+  button?.addEventListener("click", () => input!.click());
+  input?.addEventListener("change", (event) => {
+    const { files } = event.target as HTMLInputElement;
+    if (!files || files.length <= 0) return;
     $search.set("");
     $models.set({});
     $progress.set({ current: "", remaining: 0 });
-    input!.click();
-  });
-  input?.addEventListener("change", (event) =>
     worker.postMessage({
-      files: (event.target as HTMLInputElement).files,
+      files,
       hashCache: $hashes.get(),
-    })
-  );
+    });
+  });
   worker.addEventListener("message", (event) => {
     const { data } = event || {};
     if (!data) return;

@@ -37,6 +37,9 @@
 .model-li .fields {
   font-size: 0.8em;
 }
+.model-li .fields span {
+  overflow-x: scroll;
+}
 .model-li .textarea {
   display: contents;
 }

@@ -1,8 +1,15 @@
 import type { Model } from "@/lib/types";
 import NewTab from "@/lib/svg/newTab";
 import "./modelListItem.css";
+import "./modelGridItem.css";
 
-export default function ModelListItem({ model: data }: { model: Model }) {
+export default function ModelListItem({
+  layout,
+  model: data,
+}: {
+  layout: "list" | "grid";
+  model: Model;
+}) {
   const {
     id,
     name: fileName,
@@ -28,7 +35,24 @@ export default function ModelListItem({ model: data }: { model: Model }) {
   )} MB / ${Math.round(size / 1024 / 1000)} MB)`;
 
   const title = modelName && name ? `${modelName} - ${name}` : fileName;
-  const image = images?.[0];
+  const notFoundImg = {
+    url: `${import.meta.env.BASE_URL}/not-found.png`,
+    width: 0,
+    height: 0,
+  };
+  const queuedImg = {
+    url: `${import.meta.env.BASE_URL}/queued.png`,
+    width: 0,
+    height: 0,
+  };
+  const hasImg = images && images.length > 0;
+  const image = success
+    ? images?.[0]
+    : error
+    ? notFoundImg
+    : queued || loading
+    ? queuedImg
+    : null;
   const triggers =
     hasTriggers && trainedWords.length > 1
       ? `${trainedWords?.join(", ")},`
@@ -36,12 +60,12 @@ export default function ModelListItem({ model: data }: { model: Model }) {
 
   return (
     <li
-      class="model-li"
+      class={layout === "list" ? "model-li" : "model-gi"}
       data-success={success}
       data-is-queued={queued}
       data-is-loading={loading}
+      data-has-preview={hasImg}
       data-has-error={!!error}
-      data-has-preview={!!image}
     >
       {image && (
         <div class="preview">
