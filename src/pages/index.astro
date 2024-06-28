@@ -31,6 +31,7 @@ import "@/styles/main.css";
     $hashes,
     cacheHash,
     updateModel,
+    $search,
   } from "@/lib/store";
   import type { Model } from "@/lib/types";
 
@@ -41,6 +42,7 @@ import "@/styles/main.css";
   });
 
   button?.addEventListener("click", () => {
+    $search.set("");
     $models.set({});
     $progress.set({ current: "", remaining: 0 });
     input!.click();
