@@ -26,6 +26,7 @@ export const fuseConfig = {
     "info.name",
     "info.trainedWords",
     "info.model.type",
+    "baseModelInfo.creator.username",
   ],
   includeMatches: true,
   threshold: 0.4,
