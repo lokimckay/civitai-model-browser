@@ -1,5 +1,11 @@
 .model-info h1 {
   font-size: 1.5em;
+  margin-top: 0;
+}
+.model-info .meta {
+  display: flex;
+  gap: 0.5em;
+  margin-top: 1em;
 }
 
 .model-info ul.fields {
@@ -9,6 +15,18 @@
   row-gap: 0.5em;
 }
 
-.model-info ul.fields .input {
+.model-info ul.fields .input,
+.model-info ul.fields li {
   display: contents;
+}
+
+.model-info .gallery img.thumbnail {
+  border: 0.25em solid var(--accent-blue);
+  border-radius: 0.25em;
+}
+
+.model-info .description {
+  border-top: 2px dotted var(--lighter);
+  margin-top: 2em;
+  padding-top: 0.5em;
 }

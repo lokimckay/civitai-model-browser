@@ -1,5 +1,6 @@
-import { civitaiEndpoint } from "./config";
+import { civitaiByHashEndpoint, civitaiByModelIdEndpoint } from "./config";
 import type {
+  BaseModel,
   Image,
   Model,
   ModelArtifact,
@@ -87,9 +88,11 @@ function getStreamedHash(
   });
 }
 
-export async function tryMetadataHash(
-  model: Model
-): Promise<{ hash: string; info: ModelVersion } | null> {
+export async function tryMetadataHash(model: Model): Promise<{
+  hash: string;
+  info: ModelVersion;
+  baseModelInfo: BaseModel;
+} | null> {
   if (model.extension !== "safetensors") return null;
   const hash = model.hash
     ? model.hash
@@ -97,25 +100,41 @@ export async function tryMetadataHash(
         0,
         12
       );
-  const info = await getInfo(hash);
-  return info ? { hash, info } : null;
+  const result = await getInfo(hash);
+  const { info, baseModelInfo } = result || {};
+  return result ? { hash, info, baseModelInfo } : null;
 }
 
-export function getInfo(hash: string): Promise<ModelVersion> {
+type GetInfoResult = { info: ModelVersion; baseModelInfo: BaseModel };
+export function getInfo(hash: string): Promise<GetInfoResult> {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch(`${civitaiEndpoint}/${hash}`);
-      if (!response.ok)
+      const versionRes = await fetch(`${civitaiByHashEndpoint}/${hash}`);
+      if (!versionRes.ok)
         reject({
           message:
-            response.status === 404
+            versionRes.status === 404
               ? "Not found on Civitai"
               : "Failed to retrieve info from Civitai",
-          error: response.statusText,
+          error: versionRes.statusText,
         });
-      const json = await response.json();
-      const pruned = pruneModelVersion(json);
-      resolve(pruned);
+      const versionJson = await versionRes.json();
+      const versionPruned = pruneModelVersion(versionJson);
+
+      const baseRes = await fetch(
+        `${civitaiByModelIdEndpoint}/${versionPruned.modelId}`
+      );
+      if (!baseRes.ok)
+        reject({
+          message:
+            baseRes.status === 404
+              ? "Not found on Civitai"
+              : "Failed to retrieve info from Civitai",
+          error: baseRes.statusText,
+        });
+      const baseJson = await baseRes.json();
+      const basePruned = pruneBaseModel(baseJson);
+      resolve({ info: versionPruned, baseModelInfo: basePruned });
     } catch (error) {
       reject(err("Failed to retrieve info from Civitai", error));
     }
@@ -126,6 +145,19 @@ export async function toArray<T>(iter: AsyncGenerator<T>): Promise<T[]> {
   const arr = [];
   for await (const i of iter) arr.push(i);
   return arr;
+}
+
+export function pruneBaseModel(rawBaseModel: any): BaseModel {
+  const rbm = rawBaseModel;
+  const { description, nsfw, creator } = rbm;
+  return {
+    description,
+    nsfw,
+    creator: {
+      username: creator.username,
+      image: creator.image,
+    },
+  };
 }
 
 export function pruneModelVersion(rawModelVersion: any): ModelVersion {

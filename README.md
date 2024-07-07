@@ -23,9 +23,9 @@ Runs in your browser, no data is uploaded
 - [x] cycle preview images
 - [x] grid view
 - [x] hide error results
-- [ ] show more preview images on details page
-- [ ] sort by name/date downloaded
+- [x] show more preview images on details page
 - [ ] filter by base model
+- [ ] sort by name/date downloaded
 - [ ] Fuse feedback
 - [ ] use dexie instead of localstorage (10MB limit in localstorage, indexeddb much larger)
 - [ ] save to origin file system (for hashes & collections & notes)

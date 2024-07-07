@@ -12,6 +12,7 @@ export type Model = {
   hashing?: boolean;
   hashedBytes?: number;
   info?: ModelVersion;
+  baseModelInfo?: BaseModel;
   fetching?: boolean;
   image?: string;
   error?: Error;
@@ -20,6 +21,16 @@ export type Model = {
 export type Progress = {
   remaining: number;
   current: string | null;
+};
+
+// Populated by additonal API call
+export type BaseModel = {
+  description: string;
+  nsfw: boolean; // unreliable - not sure why
+  creator: {
+    username: string;
+    image: string;
+  };
 };
 
 export type ModelVersion = {
@@ -56,7 +67,7 @@ export type RemoteModel = {
     | "LORA"
     | "Controlnet"
     | "Poses";
-  nsfw: boolean;
+  nsfw: boolean; // unreliable - not sure why
 };
 
 export type ModelArtifact = {

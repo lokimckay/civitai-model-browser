@@ -39,8 +39,9 @@ async function processModel(model: Model) {
 
   postUpdate({ id, fetching: true });
   await getInfo(hash)
-    .then((info) => {
-      postUpdate({ id, info, fetching: false });
+    .then((res) => {
+      const { info, baseModelInfo } = res;
+      postUpdate({ id, info, baseModelInfo, fetching: false });
     })
     .catch((error) => {
       postUpdate({ id, error, fetching: false });

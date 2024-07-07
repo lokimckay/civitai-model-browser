@@ -7,8 +7,10 @@ export const modelExtensions = [
   "pt",
   "gguf",
 ];
-export const civitaiEndpoint =
+export const civitaiByHashEndpoint =
   "https://civitai.com/api/v1/model-versions/by-hash";
+
+export const civitaiByModelIdEndpoint = "https://civitai.com/api/v1/models";
 
 export const fuseConfig = {
   keys: [
