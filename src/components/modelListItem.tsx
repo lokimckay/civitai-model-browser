@@ -1,13 +1,14 @@
 import type { Model } from "@/lib/types";
 import NewTab from "@/lib/svg/newTab";
+import { DEFAULT_LAYOUT } from "@/lib/store";
 import "./modelListItem.css";
 import "./modelGridItem.css";
 
 export default function ModelListItem({
-  layout,
+  layout = DEFAULT_LAYOUT,
   model: data,
 }: {
-  layout: "list" | "grid";
+  layout?: "list" | "grid";
   model: Model;
 }) {
   const {

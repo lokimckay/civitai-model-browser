@@ -1,13 +1,18 @@
-import { $models, $searchResults, $search, $progress } from "../lib/store";
+import {
+  $models,
+  $searchResults,
+  $search,
+  $progress,
+  $settings,
+  type Settings,
+} from "../lib/store";
 import { useStore } from "@nanostores/preact";
+import { useSignal } from "@preact/signals";
+import { useEffect } from "preact/hooks";
 import ModelListItem from "./modelListItem";
 import "./models.css";
 
-export default function Models({
-  layout = "grid",
-}: {
-  layout?: "grid" | "list";
-}) {
+export default function Models() {
   const _models = useStore($models);
   const models = Object.values(_models);
   const search = useStore($search);
@@ -15,8 +20,20 @@ export default function Models({
   const progress = useStore($progress);
   const { remaining } = progress;
 
-  const items =
-    search !== "" && searchResults ? searchResults.map((r) => r.item) : models;
+  const settingsSig = useSignal<Settings>({}); // Workaround - this shouldn't be needed. useStore does not trigger rerender for some reason
+  useEffect(() => {
+    settingsSig.value = $settings.get();
+  }, [$settings]);
+
+  const hasSearch = search !== "" && searchResults;
+  const items = hasSearch ? searchResults.map((r) => r.item) : models;
+  const { layout, giWidth, giHeight, hideMissing, hideMissingWhileSearching } =
+    settingsSig.value;
+  const filteredItems = items.filter((model) => {
+    if (hasSearch && hideMissingWhileSearching && model.error) return false;
+    if (!hasSearch && hideMissing && model.error) return false;
+    return true;
+  });
 
   return (
     <>
@@ -27,10 +44,9 @@ export default function Models({
       )}
       <ul
         class={`${layout} full-width`}
-        data-has-items={items.length > 0}
-        style={"--gi-width: 14em; --gi-height: 26em;"}
+        style={`--gi-width: ${giWidth}em; --gi-height: ${giHeight}em;`}
       >
-        {items.map((model) => (
+        {filteredItems.map((model) => (
           <ModelListItem key={model.id} layout={layout} model={model} />
         ))}
       </ul>

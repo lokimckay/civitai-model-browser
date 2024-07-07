@@ -15,7 +15,7 @@ ul.grid {
   border-left: 0;
   border-right: 0;
 }
-ul.grid[data-has-items="true"] {
+ul.grid {
   border: 2px solid var(--lighter);
 }
 ul.grid.full-width {
