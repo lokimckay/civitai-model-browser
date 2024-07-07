@@ -1,11 +1,22 @@
 .model-info h1 {
   font-size: 1.5em;
-  margin-top: 0;
+  margin: 0;
 }
-.model-info .meta {
+.model-info .pre-meta {
   display: flex;
+  justify-content: space-between;
   gap: 0.5em;
   margin-top: 1em;
+  font-size: 0.8em;
+}
+.model-info .pre-meta .badges {
+  display: flex;
+  gap: 0.5em;
+}
+.model-info .post-meta {
+  display: flex;
+  margin-bottom: 1em;
+  font-size: 0.8em;
 }
 
 .model-info ul.fields {

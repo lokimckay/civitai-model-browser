@@ -1,6 +1,6 @@
 import type { Model } from "@/lib/types";
-import NewTab from "@/lib/svg/newTab";
-import { DEFAULT_LAYOUT, updateModel } from "@/lib/store";
+import NewTab from "@/components/newTab";
+import { DEFAULT_LAYOUT } from "@/lib/store";
 import "./modelListItem.css";
 import "./modelGridItem.css";
 
@@ -79,9 +79,6 @@ export default function ModelListItem({
             alt={name}
             width={image.width}
             height={image.height}
-            onClick={() => {
-              updateModel({ id, previewIdx: imgIdx + 1 });
-            }}
           />
         </div>
       )}
@@ -103,11 +100,7 @@ export default function ModelListItem({
                 </>
               )}
             </div>
-            {browseUrl && (
-              <a href={browseUrl}>
-                Civitai <NewTab />
-              </a>
-            )}
+            {browseUrl && <NewTab label="Civitai" href={browseUrl} />}
           </div>
         )}
         <h3 class="truncate">

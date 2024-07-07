@@ -1,0 +1,10 @@
+.newTab {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.newTab svg {
+  position: relative;
+  top: -1px;
+}

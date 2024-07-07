@@ -5,6 +5,7 @@ import Input from "./input";
 import Gallery from "./gallery";
 import "./model.css";
 import Badge from "./badge";
+import NewTab from "@/components/newTab";
 
 export default function Model() {
   const queryId = new URLSearchParams(location.search).get("id");
@@ -21,7 +22,7 @@ export default function Model() {
     previewIdx,
     hashing,
   } = data || {};
-  const { name, model, trainedWords, images, baseModel, modelId } =
+  const { name, model, trainedWords, images, baseModel, browseUrl } =
     modelVersion || {};
   const { description, nsfw, creator } = baseModelInfo || {};
   const { name: modelName, type } = model || {};
@@ -35,14 +36,22 @@ export default function Model() {
 
   return (
     <div class="model-info">
-      <div class="meta">
-        {type && <Badge label={type} />}
-        {baseModel && <Badge label={baseModel.toString()} />}
-        {nsfw && <Badge label="NSFW" color="var(--accent-red)" />}
+      <div class="pre-meta">
+        <div class="badges">
+          {type && <Badge label={type} />}
+          {baseModel && <Badge label={baseModel.toString()} />}
+          {nsfw && <Badge label="NSFW" color="var(--accent-red)" />}
+        </div>
+        {browseUrl && <NewTab label="Civitai" width={16} href={browseUrl} />}
       </div>
       <h1>
         {success ? `${modelName} - ${name}` : `${statusEmoji} ${fileName}`}
       </h1>
+      <div class="post-meta">
+        {creator?.username && (
+          <span class="creator">by {creator.username}</span>
+        )}
+      </div>
       <ul class="fields">
         <li>
           <Input
