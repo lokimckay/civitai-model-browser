@@ -42,7 +42,7 @@ export type ModelVersion = {
   downloadUrl: string;
   browseUrl: string;
   trainedWords: string[];
-  baseModel: number;
+  baseModel: "SD 1.5" | "SDXL 1.0" | "Pony" | "Other";
   model: RemoteModel;
   files: ModelArtifact[];
   images: Image[];

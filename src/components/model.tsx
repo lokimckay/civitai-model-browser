@@ -22,9 +22,16 @@ export default function Model() {
     previewIdx,
     hashing,
   } = data || {};
-  const { name, model, trainedWords, images, baseModel, browseUrl } =
-    modelVersion || {};
-  const { description, nsfw, creator } = baseModelInfo || {};
+  const {
+    name,
+    description,
+    model,
+    trainedWords,
+    images,
+    baseModel,
+    browseUrl,
+  } = modelVersion || {};
+  const { description: baseDesc, nsfw, creator } = baseModelInfo || {};
   const { name: modelName, type } = model || {};
   const queued = !(fetching === false) || !(hashing === false);
   const loading = fetching || hashing;
@@ -33,6 +40,7 @@ export default function Model() {
   const hasTriggers =
     type === "LORA" && trainedWords && trainedWords.length > 0;
   const hasImages = images && images.length > 0;
+  const hasMultipleDesc = baseDesc && description;
 
   return (
     <div class="model-info">
@@ -83,11 +91,27 @@ export default function Model() {
           ))}
         </Gallery>
       )}
+      {hasMultipleDesc && <h2>Descriptions</h2>}
+      {baseDesc && (
+        <>
+          <h3 class="desc-header">
+            {hasMultipleDesc ? modelName : "Description"}
+          </h3>
+          <div
+            class="description"
+            dangerouslySetInnerHTML={{ __html: baseDesc }}
+          />
+        </>
+      )}
+
       {description && (
-        <div
-          class="description"
-          dangerouslySetInnerHTML={{ __html: description }}
-        />
+        <>
+          <h3 class="desc-header">{hasMultipleDesc ? name : "Description"}</h3>
+          <div
+            class="description"
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
+        </>
       )}
       <h2>Raw data</h2>
       <textarea readOnly={true} spellCheck={false} rows={25}>

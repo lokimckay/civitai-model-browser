@@ -4,6 +4,7 @@ import {
   $search,
   $progress,
   $settings,
+  $filters,
   type Settings,
 } from "../lib/store";
 import { useStore } from "@nanostores/preact";
@@ -25,11 +26,23 @@ export default function Models() {
     settingsSig.value = $settings.get();
   }, [$settings]);
 
+  const filters = useStore($filters);
+  const filtersSig = useSignal<Record<string, boolean>>({}); // Workaround - this shouldn't be needed. useStore does not trigger rerender for some reason
+  useEffect(() => {
+    filtersSig.value = filters;
+  }, [filters]);
+
   const hasSearch = search !== "" && searchResults;
   const items = hasSearch ? searchResults.map((r) => r.item) : models;
   const { layout, giWidth, giHeight, hideMissing, hideMissingWhileSearching } =
     settingsSig.value;
   const filteredItems = items.filter((model) => {
+    const disabledFilters = Object.entries(filtersSig.value).filter(
+      ([_, enabled]) => !enabled
+    );
+
+    if (disabledFilters.some(([filter]) => model.info?.baseModel === filter))
+      return false;
     if (hasSearch && hideMissingWhileSearching && model.error) return false;
     if (!hasSearch && hideMissing && model.error) return false;
     return true;

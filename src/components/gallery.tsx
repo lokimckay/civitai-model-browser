@@ -1,4 +1,4 @@
-import { createRef, useEffect, type HTMLAttributes } from "preact/compat";
+import { useEffect, type HTMLAttributes } from "preact/compat";
 import { useSignal } from "@preact/signals";
 import "./gallery.css";
 import { updateModel } from "@/lib/store";
@@ -46,6 +46,7 @@ export default function Gallery(props: Props) {
 
   function setThumbnail() {
     updateModel({ id: mvId, previewIdx: activeIdx.value! });
+    activeIdx.value = null;
   }
 
   return (

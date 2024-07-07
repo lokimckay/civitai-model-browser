@@ -27,6 +27,18 @@ export type Settings = {
   hideMissingWhileSearching?: boolean;
 };
 
+const FILTERS = ["SD 1.5", "SDXL 1.0", "Pony", "Other"] as const;
+export function setAllFilters(newState: boolean) {
+  $filters.set(
+    FILTERS.reduce((acc, filter) => ({ ...acc, [filter]: newState }), {})
+  );
+}
+export const $filters = persistentMap<Record<string, boolean>>(
+  "filters: ",
+  FILTERS.reduce((acc, filter) => ({ ...acc, [filter]: true }), {}),
+  encDec
+);
+
 export const $settings = persistentMap<Settings>(
   "settings: ",
   DEFAULT_SETTINGS,

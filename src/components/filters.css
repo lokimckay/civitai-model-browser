@@ -1,0 +1,45 @@
+.filters {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+.filters .modal {
+  border: 2px solid var(--lighter);
+  border-radius: 0.25em;
+  padding: 2em 3em;
+  background-color: var(--mid);
+}
+
+.filters .modal h2 {
+  margin-top: 0;
+}
+
+.filters .modal .base-models {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  column-gap: 1.5em;
+  row-gap: 0.25em;
+  margin-bottom: 1em;
+}
+
+.filters .modal .base-models .switch {
+  display: contents;
+}
+
+.filters .modal button {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.5em;
+  padding: 0.5em;
+}

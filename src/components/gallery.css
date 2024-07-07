@@ -5,6 +5,11 @@
   margin: 1em 0;
 }
 
+.gallery .gallery-item {
+  position: relative;
+  overflow: hidden;
+}
+
 .gallery img {
   width: 100%;
   height: 100%;

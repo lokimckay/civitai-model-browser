@@ -2,6 +2,7 @@
 import Main from "@/layouts/Main.astro";
 import Models from "@/components/models";
 import Search from "@/components/search";
+import Filters from "@/components/filters";
 import "@/styles/main.css";
 ---
 
@@ -19,6 +20,7 @@ import "@/styles/main.css";
       label="Choose model directory"
     />
     <button>Choose model folder</button>
+    <Filters client:visible style="float: right;" />
     <Search client:visible />
     <Models client:visible />
   </main>
