@@ -20,16 +20,20 @@ Runs in your browser, no data is uploaded
 - [x] preview images
 - [x] fuzzy search
 - [x] share project
+- [x] cycle preview images
+- [x] grid view
+- [x] hide error results
+- [ ] show more preview images on details page
+- [ ] sort by name/date downloaded
+- [ ] filter by base model
 - [ ] Fuse feedback
 - [ ] use dexie instead of localstorage (10MB limit in localstorage, indexeddb much larger)
 - [ ] save to origin file system (for hashes & collections & notes)
 - [ ] read hash from adjacent .sha256 file if it exists
 - [ ] export hash files
 - [ ] back to top button
-- [ ] grid view
+- [ ] sticky search bar
 - [ ] copy buttons
-- [ ] cycle preview images
-- [ ] hide error results
 - [ ] expose model extensions as setting
 - [ ] expose concurrent workers setting
 - [ ] allow skipping of specific models

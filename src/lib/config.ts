@@ -16,6 +16,7 @@ export const fuseConfig = {
     "hash",
     "path",
     "info.air",
+    "info.model.name",
     "info.baseModel",
     "info.description",
     "info.id",

@@ -36,6 +36,7 @@
   overflow: hidden;
   display: grid;
   align-items: flex-end;
+  pointer-events: none;
 }
 .model-gi .content > * {
   display: none;
@@ -49,4 +50,5 @@
   width: 100%;
   background-color: rgba(0, 0, 0, 0.8);
   font-size: 0.8em;
+  pointer-events: all;
 }

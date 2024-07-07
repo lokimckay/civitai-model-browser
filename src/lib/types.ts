@@ -7,6 +7,7 @@ export type Model = {
   path: string;
   extension: string;
   size: number;
+  previewIdx: number;
   hash?: string;
   hashing?: boolean;
   hashedBytes?: number;

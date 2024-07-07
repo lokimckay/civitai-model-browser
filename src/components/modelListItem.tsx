@@ -1,6 +1,6 @@
 import type { Model } from "@/lib/types";
 import NewTab from "@/lib/svg/newTab";
-import { DEFAULT_LAYOUT } from "@/lib/store";
+import { DEFAULT_LAYOUT, updateModel } from "@/lib/store";
 import "./modelListItem.css";
 import "./modelGridItem.css";
 
@@ -18,6 +18,7 @@ export default function ModelListItem({
     hashing,
     fetching,
     info: modelVersion,
+    previewIdx,
     hashedBytes,
     error,
   } = data || {};
@@ -47,8 +48,11 @@ export default function ModelListItem({
     height: 0,
   };
   const hasImg = images && images.length > 0;
+
+  const imgIdx = previewIdx % (images?.length || 1);
+
   const image = success
-    ? images?.[0]
+    ? images?.[imgIdx]
     : error
     ? notFoundImg
     : queued || loading
@@ -75,6 +79,9 @@ export default function ModelListItem({
             alt={name}
             width={image.width}
             height={image.height}
+            onClick={() => {
+              updateModel({ id, previewIdx: imgIdx + 1 });
+            }}
           />
         </div>
       )}

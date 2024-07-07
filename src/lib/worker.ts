@@ -21,6 +21,7 @@ addEventListener("message", (event) => {
         name,
         path: webkitRelativePath,
         extension: name.split(".").pop() || "",
+        previewIdx: 0,
         size,
         hash,
         localFile: file,
@@ -35,6 +36,7 @@ addEventListener("message", (event) => {
   let pendingModels = [...sorted];
 
   const maxActiveWorkers = 2; // TODO expose as setting
+
   for (let i = 0; i < maxActiveWorkers; i++) {
     const subworker = new Worker(new URL("./subworker", import.meta.url), {
       type: "module",
