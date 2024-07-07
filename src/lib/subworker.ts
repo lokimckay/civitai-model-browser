@@ -2,7 +2,7 @@ import { type Model } from "./types";
 import { getInfo, getHash, tryMetadataHash } from "./api";
 
 addEventListener("message", (event: MessageEvent<Model>) => {
-  if (!event.data.id)
+  if (!event.data?.id)
     return console.error("SubWorker received invalid data", event.data);
 
   processModel(event.data);
