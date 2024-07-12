@@ -29,6 +29,7 @@
   display: grid;
   grid-template-columns: repeat(3, auto);
   justify-content: center;
+  justify-items: center;
   align-items: center;
   align-content: center;
   gap: 1em;
@@ -38,4 +39,16 @@
   grid-column: 2;
   width: max-content;
   margin: auto;
+}
+
+.lightbox .metadata {
+  grid-column: span 3;
+}
+
+.lightbox .metadata textarea {
+  position: absolute;
+  left: 3em;
+  right: 3em;
+  width: auto;
+  white-space: pre-wrap;
 }
